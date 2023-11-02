@@ -16,7 +16,6 @@ def open_alarm_when_detected(img_thing, name: str, crime: str, criminal_detected
             cv2.moveWindow("criminal photo", 700, 100)
             cv2.imshow("criminal photo", criminal)
             if cv2.waitKey(1) == ord('e'):
-                print("Destroy Videos")
                 cv2.destroyWindow("Alarm criminal")
                 cv2.destroyWindow("criminal photo")
         else:
