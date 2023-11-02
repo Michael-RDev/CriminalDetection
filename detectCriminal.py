@@ -5,12 +5,13 @@ from openAlarm import open_alarm_when_detected
 
 def face_recognition_cam(camera, known_face_encodings, names, crimes):
     process_this_frame = True
+    criminal_photo = "imgs/criminal.jpg"
     alarm_img = "imgs/Alarm.jpg"
     while True:
         ret, frame = camera.read()
 
         if not ret:
-            break
+            break 
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
         if process_this_frame:
@@ -30,6 +31,9 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
                     first_match_index = matches.index(True)
                     name = names[first_match_index]
                     crime = crimes[first_match_index]
+                    top, right, bottom, left = face_locations[first_match_index]
+                    face_img = small_frame[top:bottom, left:right]
+                    cv2.imwrite(criminal_photo, face_img)
 
                 face_names.append(f"Name: {name}, Crime: {crime}")
 
@@ -43,7 +47,8 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 255), 2)
             cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 3)
         if criminal_detected == True:
-            open_alarm_when_detected(alarm_img, name, crime, criminal_detected)
+            open_alarm_when_detected(alarm_img, name, crime, criminal_detected, criminal_photo)
+        frame = cv2.resize(frame,(500,300))
         cv2.imshow('criminal recognition weee', frame)
         if cv2.waitKey(1) == ord('q'):
             break
