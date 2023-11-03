@@ -8,7 +8,7 @@ def load_image_faces(path: str):
     images = []
     names = []
     crimes = []
-    for file in os.listdir(path):
+    for file in tqdm(os.listdir(path), desc="Loading Images: "):
         images.append(os.path.join(path, file))
         file_parts = file.split("_")
         if file.endswith(".jpg"):
@@ -20,7 +20,7 @@ def load_image_faces(path: str):
 
 def find_face_encodings(images):
     known_face_encodings = []
-    for image in tqdm(images, "Finding face encodings: "):
+    for image in tqdm(images, "Finding Face Encodings: "):
         img = face_recognition.load_image_file(image)
         encoding = face_recognition.face_encodings(img)[0]
         known_face_encodings.append(encoding)
