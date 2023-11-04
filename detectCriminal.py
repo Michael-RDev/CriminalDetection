@@ -37,7 +37,7 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
                         if 0 <= first_match_index <= len(face_locations):
                             name = names[first_match_index]
                             crime = crimes[first_match_index]
-                            if face_locations[first_match_index] != []:
+                            if face_locations[first_match_index] != ():
                                 top, right, bottom, left = face_locations[first_match_index]
                                 face_img = small_frame[top:bottom, left:right]
                                 cv2.imwrite(criminal_photo , face_img)  
@@ -50,8 +50,8 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
         process_this_frame = not process_this_frame
 
         print("face_locations: ", face_locations)
-        for indx, location in enumerate(face_locations):
-            if location[indx] != []:
+        for _, location in enumerate(face_locations):
+            if location != ():
                 for location, name in zip(face_locations, face_names):
                     if location:
                         top, right, bottom, left = location
@@ -72,5 +72,5 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(1)
     face_recognition_cam(camera, known_face_encodings, names, crimes)
