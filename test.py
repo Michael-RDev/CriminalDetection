@@ -4,5 +4,6 @@ for indx,array in enumerate(arr):
     if arr[indx]:
         print(arr[indx])
         for value in arr[indx]:
-            values = [value, value, value, value]
+            top, bottom, left, right = value
+            
             
