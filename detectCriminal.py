@@ -9,7 +9,6 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
     alarm_img = "imgs/Alarm.jpg"
     while True:
         ret, frame = camera.read()
-
         if not ret:
             break 
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)

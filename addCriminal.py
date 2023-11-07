@@ -4,7 +4,6 @@ import requests
 photo_path = "data/"
 
 
-
 def web_mode():
     pass
 

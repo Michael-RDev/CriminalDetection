@@ -11,7 +11,7 @@ def open_alarm_when_detected(img_thing, name: str, crime: str, criminal_detected
         criminal = cv2.imread(criminal_img)
         criminal = cv2.resize(criminal, (500, 500))
         combined_img = cv2.hconcat([img, criminal])
-        cv2.putText(combined_img, f"{name}, {crime}", (txtpoints[0], txtpoints[1]), cv2.FONT_HERSHEY_SIMPLEX, font_size, (0, 0, 0), font_thick)
+        cv2.putText(combined_img, f"{name}", (txtpoints[0], txtpoints[1]), cv2.FONT_HERSHEY_SIMPLEX, font_size, (0, 0, 0), font_thick)
         cv2.moveWindow("Alarm criminal", 500, 200)
         cv2.imshow("Alarm criminal", combined_img)
 
