@@ -1,7 +1,13 @@
 import cv2
+from loadFunctions import names, known_face_encodings, crimes, images
 
-def open_alarm_when_detected(img_thing, name: str, crime: str, criminal_detected: bool, criminal_img: str):
+def open_alarm_when_detected(img_thing, name: str, crime: str, criminal_detected: bool, criminal_img: str, names_mug: list, crimes_mug: list, images_mug: list):
     if criminal_detected:
+        # criminal_names = [name for name in names_mug]
+        # criminal_crimes = [crimes for crimes in crimes_mug]
+        # criminal_imgs = [img for img in images_mug]
+        # if name in criminal_names and crime in criminal_crimes:
+        #     print(f"name: {name}")
         img = cv2.imread(img_thing)
         img = cv2.resize(img, (500, 500))
         x, y, _ = img.shape
@@ -19,4 +25,8 @@ def open_alarm_when_detected(img_thing, name: str, crime: str, criminal_detected
             cv2.destroyWindow("Alarm criminal")
     else:
         cv2.destroyAllWindows()
+
+
+while True:
+    open_alarm_when_detected("imgs/Alarm.jpg", "Michael", "test", True, "imgs/criminal.jpg",names, crimes, images)
 
