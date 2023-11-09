@@ -1,6 +1,7 @@
 import face_recognition
 import cv2
-from loadFunctions import names, known_face_encodings, crimes
+from loadFunctions import known_face_encodings
+from loadFunctions import names, crimes, images
 from openAlarm import open_alarm_when_detected
 
 def face_recognition_cam(camera, known_face_encodings, names, crimes):
@@ -44,7 +45,7 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
                             pass
                         
 
-                face_names.append(f"Name: {name}, Crime: {crime}")
+                face_names.append(name)
 
         process_this_frame = not process_this_frame
 
@@ -68,7 +69,7 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
                     cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 3)
 
         if criminal_detected == True:
-            open_alarm_when_detected(alarm_img, name, crime, criminal_detected, criminal_photo)
+            open_alarm_when_detected(alarm_img, name, crime, criminal_detected, criminal_photo, names, crimes, images)
         frame = cv2.resize(frame,(500,300))
         cv2.imshow('criminal recognition weee', frame)
         if cv2.waitKey(1) == ord('q'):
