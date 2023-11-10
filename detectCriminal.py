@@ -29,7 +29,7 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
                 if True in matches:
                     criminal_detected = True
                     first_match_index = matches.index(True)
-                    if first_match_index != 0:
+                    if first_match_index != 0:  
                         face_locations.insert(first_match_index - len(face_locations), ())
 
    
