@@ -1,9 +1,9 @@
 import cv2
 import time
-import os
+from loadFunctions import images
 
-dir_path = "/Users/michael/Desktop/CriminalDetection/imgs"
-imgs = os.listpath(dir_path)
 
-for img in imgs:
-    
+# Michael I've only written 4 lines and have error pls help
+for imgs in images:
+    cv2.imshow("gobbledigoo", imgs)
+    time.sleep(1)

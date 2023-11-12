@@ -25,7 +25,7 @@ def photo_mode(camera):
 
 
 if __name__ == "__main__":
-    cam = cv2.VideoCapture(1)
+    cam = cv2.VideoCapture(0)
     mode = str(input("What mode do you want to capture the convict [Cam, Web]: Type (W or C))")).lower()
     if mode == "w":
         web_mode()
