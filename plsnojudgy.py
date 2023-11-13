@@ -1,9 +1,14 @@
 import cv2
 import time
-from loadFunctions import images
+import os
+from tqdm import tqdm
 
 
 # Michael I've only written 4 lines and have error pls help
-for imgs in images:
-    cv2.imshow("gobbledigoo", imgs)
-    time.sleep(1)
+def load_image_faces(path: str):
+    images = []
+    for file in tqdm(os.listdir(path), desc="Mug Shot Imgs: "):
+        images.append(os.path.join(path, file))
+    return images
+
+
