@@ -9,6 +9,7 @@ def open_mug_shot(names_mug: list, crimes_mug: list, images_mug: list, name: str
     criminal_imgs = [image for image in images_mug]
     if name in criminal_names and crime in criminal_crimes:
         mug_shot_img = cv2.imread(criminal_imgs[criminal_names.index(name)])
+        #get random image from images_mug list and then after(counter > 10) then show the real mugshot
         return mug_shot_img
         
 
