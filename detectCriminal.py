@@ -5,6 +5,7 @@ from loadFunctions import names, crimes, images
 from openAlarm import open_alarm_when_detected
 
 def face_recognition_cam(camera, known_face_encodings, names, crimes):
+    counter = 0
     process_this_frame = True
     criminal_photo = "imgs/criminal.jpg"
     alarm_img = "imgs/Alarm.jpg"
@@ -40,11 +41,12 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
                             if face_locations[first_match_index] != ():
                                 top, right, bottom, left = face_locations[first_match_index]
                                 face_img = small_frame[top:bottom, left:right]
-                                cv2.imwrite(criminal_photo , face_img)  
+                                criminal_encoding = known_face_encodings[first_match_index]
+                                is_criminal = face_recognition.compare_faces([criminal_encoding], face_encoding)[0]
+                                if is_criminal:
+                                    cv2.imwrite(criminal_photo, face_img)
                         else:
                             pass
-                        
-
                 face_names.append(name)
 
         process_this_frame = not process_this_frame
@@ -67,9 +69,12 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
                     left *= 4
                     cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 255), 2)
                     cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 3)
-
+            
         if criminal_detected == True:
-            open_alarm_when_detected(alarm_img, name, crime, criminal_detected, criminal_photo, names, crimes, images)
+            open_alarm_when_detected(alarm_img, name, crime, criminal_detected, criminal_photo, counter)
+            counter += 1
+        else: 
+            counter = 0
         frame = cv2.resize(frame,(500,300))
         cv2.imshow('criminal recognition weee', frame)
         if cv2.waitKey(1) == ord('q'):
