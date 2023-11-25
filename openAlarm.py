@@ -1,5 +1,6 @@
 import cv2
 from loadFunctions import names, crimes, images
+import time
 import numpy as np
 
 
@@ -7,7 +8,6 @@ def open_mug_shot(names_mug: list, crimes_mug: list, images_mug: list, name: str
     criminal_names = [name for name in names_mug]
     criminal_crimes = [crime for crime in crimes_mug]
     criminal_imgs = [image for image in images_mug]
-    print("criminal : ", counter)
     if name in criminal_names and crime in criminal_crimes:
         if counter < 10:
             random_index = np.random.randint(0, len(criminal_imgs))
