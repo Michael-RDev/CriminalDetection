@@ -31,7 +31,6 @@ def detectRectangles(camera):
         thickness = 2
 
         bounding_box = (top_left[0], top_left[1], bottom_right[0], bottom_right[1])
-
         for contour in contours:
             perimeter = cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, 0.03 * perimeter, True)

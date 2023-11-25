@@ -87,6 +87,7 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
     camera.release()
     cv2.destroyAllWindows()
 
+
 if __name__ == '__main__':
     camera = cv2.VideoCapture(1)
     face_recognition_cam(camera, known_face_encodings, names, crimes)

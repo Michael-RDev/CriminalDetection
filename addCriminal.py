@@ -19,7 +19,6 @@ def web_mode(imagelink):
         cv2.imwrite(photo_path+image_name, image)
         cv2.destroyAllWindows()
 
-
 def photo_mode(camera):
     name = str(input("What is the name of convicts: "))
 

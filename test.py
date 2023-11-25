@@ -13,7 +13,6 @@ def is_inside(rect, box):
     else:
         return False
 
-
 def detectRectangles(camera):
     while True:
         succ, frame = camera.read()
