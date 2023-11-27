@@ -4,11 +4,22 @@ import numpy as np
 
 photo_path = "data/"
 
+# jpg is current, png is former
+def get_image_name():
+    name = str(input("What is the name of convict: "))
+    crime = str(input("What is the crime committed: "))
+    type = str(input("Is this a current or former criminal? (C or F)")).lower()
+    if type == "c":
+        return name + "_" + crime + ".jpg"
+    elif type == "f":
+        return name + "_" + crime + ".png"
+    else:
+        print("Neither keys C nor F were pressed")
+        return False
 
 def web_mode(imagelink):
-    name = str(input("What is the name of convicts: "))
-    crime = str(input("What is the crime committed: "))
-    image_name = name + "_" + crime + ".jpg"
+
+    image_name = get_image_name()
 
     open_url = urllib.request.urlopen(imagelink)
     url_array = np.array(bytearray(open_url.read()), dtype=np.uint8)
@@ -20,11 +31,9 @@ def web_mode(imagelink):
         cv2.destroyAllWindows()
 
 def photo_mode(camera):
-    name = str(input("What is the name of convicts: "))
+    
+    image_name = get_image_name()
 
-    crime = str(input("What is the crime committed: "))
-
-    image_name = name + "_" + crime + ".jpg"
     while True:
         succ, frame = camera.read()
         if not succ:
