@@ -12,6 +12,7 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
     process_this_frame = True
     criminal_photo = "imgs/criminal.jpg"
     alarm_img = "imgs/Alarm.jpg"
+    notification_img = "imgs/notification_img.jpg"
     while True:
         ret, frame = camera.read()
         if not ret:
@@ -76,7 +77,7 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
             else:
                 print("PHONE DETECTED NO PERSON HEHE")
         if criminal_detected == True:
-            open_alarm_when_detected(alarm_img, name, crime, criminal_detected, criminal_photo, counter)
+            open_alarm_when_detected(alarm_img, notification_img, name, crime, criminal_detected, criminal_photo, counter)
             counter += 1
         else: 
             counter = 0

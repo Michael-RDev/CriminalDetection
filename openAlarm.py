@@ -19,9 +19,17 @@ def open_mug_shot(names_mug: list, crimes_mug: list, images_mug: list, name: str
     return None
         
 
-def open_alarm_when_detected(img_thing, name: str, crime: str, criminal_detected: bool, criminal_img: str, counter):
+def open_alarm_when_detected(img_thing, notification_image, name: str, crime: str, criminal_detected: bool, criminal_img: str, counter):
     if criminal_detected:
-        img = cv2.imread(img_thing)
+
+        for i in images:
+            if str("data/" + name + "_" + crime) in i:
+                target_image = i
+                if target_image.endswith(".png"):
+                    img = cv2.imread(notification_image)
+                else:
+                    img = cv2.imread(img_thing)
+                
         img = cv2.resize(img, (500, 500))
         x, y, _ = img.shape
         txtpoints = [x // 5, y - 100]
