@@ -1,58 +1,64 @@
 import cv2
-
-def is_inside(rect, box):
-    rect_x, rect_y, rect_w, rect_h = rect
-    box_x1, box_y1, box_x2, box_y2 = box
-
-    if (box_x1 <= rect_x <= box_x2 and
-            box_y1 <= rect_y <= box_y2 and
-            box_x1 <= rect_x + rect_w <= box_x2 and
-            box_y1 <= rect_y + rect_h <= box_y2):
-        return True
-    else:
-        return False
+import torch
+import time
+from PIL import Image
+from transformers import DetrImageProcessor, DetrForObjectDetection
+from threading import Thread
 
 
-def detectRectangles(camera):
+def detectPhone(processor, model, saved_pil_image):
+    inputs = processor(images=saved_pil_image, return_tensors="pt")
+    outputs = model(**inputs)
+
+    target_sizes = torch.tensor([saved_pil_image.size[::-1]])
+    results = processor.post_process_object_detection(outputs, target_sizes=target_sizes, threshold=0.9)[0]
+
+    phone_detected = False
+    for score, label, box in zip(results["scores"], results["labels"], results["boxes"]):
+        box = [round(i, 2) for i in box.tolist()]
+        class_name = model.config.id2label[label.item()]
+        confidence = round(score.item(), 3)
+        print(class_name)
+        if class_name == "cell phone":
+            print("FOUND CELL PHONE")
+            phone_detected = True
+
+    return phone_detected
+
+def runPhoneThread(camera):
+    processor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50", revision="no_timm")
+    model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50", revision="no_timm")
+
+    save_interval = 5 
+    start_time = time.time()
+    last_save_time = start_time
+
+    while True:
         succ, frame = camera.read()
         if not succ:
-            return
+            break
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        _, thresh = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
+        current_time = time.time()
+        elapsed_time = current_time - last_save_time
 
-        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if elapsed_time >= save_interval:
+            pil_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            pil_image.save("imgs/checkingPhone.jpg")
+            last_save_time = current_time  
 
-        #bounding box
-        x, y, _ = frame.shape
-        top_left = (int(y / 3), int(x / 8))
-        bottom_right = (int(y * 3 / 5), int(x * 3 / 3))
-        color = (255, 0, 0)
-        thickness = 2
+            saved_image = cv2.imread("imgs/checkingPhone.jpg")
+            saved_pil_image = Image.fromarray(cv2.cvtColor(saved_image, cv2.COLOR_BGR2RGB))
 
-        bounding_box = (top_left[0], top_left[1], bottom_right[0], bottom_right[1])
-        for contour in contours:
-            perimeter = cv2.arcLength(contour, True)
-            approx = cv2.approxPolyDP(contour, 0.03 * perimeter, True)
+            detection_thread = Thread(target=detectPhone, args=(processor, model, saved_pil_image))
+            detection_thread.start()
 
-            if len(approx) == 4:
-                x, y, w, h = cv2.boundingRect(approx)
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                rect_coords = (x, y, w, h)
-                if is_inside(rect_coords, bounding_box):
-                    cv2.putText(frame, 'Inside Bounding Box', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                                (0, 0, 255), 2)
-                    return True
-
-        cv2.rectangle(frame, top_left, bottom_right, color, thickness)
-        #cv2.imshow('Detected Rectangles', frame)
+        cv2.imshow('perchance finding phone', frame)
         if cv2.waitKey(1) == ord('q'):
-            return False
-        return False
+            break
 
+    camera.release()
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    cam = cv2.VideoCapture(1) 
-    detectRectangles(cam)
-    cam.release()
-    cv2.destroyAllWindows()
+    cam = cv2.VideoCapture(1)
+    runPhoneThread(cam)

@@ -1,13 +1,14 @@
 import face_recognition
 import cv2
 from loadFunctions import known_face_encodings
-from detectFalsePhoto import detectRectangles
+from detectFalsePhoto import runPhoneDetection
 from loadFunctions import names, crimes
 from openAlarm import open_alarm_when_detected
 
+
 #reminder to clean camera
 
-def face_recognition_cam(camera, known_face_encodings, names, crimes):
+def faceRecoCam(camera, known_face_encodings, names, crimes):
     counter = 0
     process_this_frame = True
     criminal_photo = "imgs/criminal.jpg"
@@ -55,8 +56,6 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
         process_this_frame = not process_this_frame
 
         for _,(location, name) in enumerate(zip(face_locations, face_names)):
-            print(detectRectangles(camera))
-            if detectRectangles(camera) == False:
                 if location != ():
                     top, right, bottom, left = location
                     top *= 4
@@ -74,14 +73,14 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
                     left *= 4
                     cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 255), 2)
                     cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 3)
-            else:
-                print("PHONE DETECTED NO PERSON HEHE")
+
         if criminal_detected == True:
             open_alarm_when_detected(alarm_img, notification_img, name, crime, criminal_detected, criminal_photo, counter)
             counter += 1
         else: 
             counter = 0
         frame = cv2.resize(frame,(500,300))
+   
         cv2.imshow('criminal recognition weee', frame)
         if cv2.waitKey(1) == ord('q'):
             break
@@ -91,4 +90,5 @@ def face_recognition_cam(camera, known_face_encodings, names, crimes):
 
 if __name__ == '__main__':
     camera = cv2.VideoCapture(1)
-    face_recognition_cam(camera, known_face_encodings, names, crimes)
+    faceRecoCam(camera, known_face_encodings, names, crimes)
+    
