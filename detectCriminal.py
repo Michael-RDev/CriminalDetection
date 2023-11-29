@@ -13,6 +13,7 @@ def faceRecoCam(camera, known_face_encodings, names, crimes):
     process_this_frame = True
     criminal_photo = "imgs/criminal.jpg"
     alarm_img = "imgs/Alarm.jpg"
+    notification_img = "imgs/notification_img.jpg"
     while True:
         ret, frame = camera.read()
         if not ret:
@@ -74,7 +75,7 @@ def faceRecoCam(camera, known_face_encodings, names, crimes):
                     cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 3)
 
         if criminal_detected == True:
-            open_alarm_when_detected(alarm_img, name, crime, criminal_detected, criminal_photo, counter)
+            open_alarm_when_detected(alarm_img, notification_img, name, crime, criminal_detected, criminal_photo, counter)
             counter += 1
         else: 
             counter = 0

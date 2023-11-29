@@ -15,6 +15,11 @@ def load_image_faces(path: str):
             name, _ = os.path.splitext(file_parts[0])
             names.append(name)
             crimes.append(file_parts[1].split(".jpg")[0])
+        if file.endswith(".png"):
+            name, _ = os.path.splitext(file_parts[0])
+            names.append(name)
+            crimes.append(file_parts[1].split(".png")[0])
+    
     return images, names, crimes
 
 
