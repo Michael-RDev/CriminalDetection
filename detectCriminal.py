@@ -1,7 +1,7 @@
 import face_recognition
 import cv2
 from loadFunctions import known_face_encodings
-from detectFalsePhoto import runPhoneDetection
+#from detectFalsePhoto import runPhoneDetection
 from loadFunctions import names, crimes
 from openAlarm import open_alarm_when_detected
 

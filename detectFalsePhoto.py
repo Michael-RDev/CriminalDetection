@@ -18,7 +18,7 @@ def detectPhone(processor, model, saved_pil_image):
         box = [round(i, 2) for i in box.tolist()]
         class_name = model.config.id2label[label.item()]
         confidence = round(score.item(), 3)
-        print(class_name)
+        print(class_name, " ", confidence)
         if class_name == "cell phone":
             print("FOUND CELL PHONE")
             phone_detected = True
@@ -29,7 +29,7 @@ def runPhoneThread(camera):
     processor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50", revision="no_timm")
     model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50", revision="no_timm")
 
-    save_interval = 5 
+    save_interval = 4
     start_time = time.time()
     last_save_time = start_time
 
@@ -51,7 +51,9 @@ def runPhoneThread(camera):
 
             detection_thread = Thread(target=detectPhone, args=(processor, model, saved_pil_image))
             detection_thread.start()
-
+        
+        frame = cv2.resize(frame, (700, 300))
+        cv2.moveWindow("perchance finding phone", 700, 10)
         cv2.imshow('perchance finding phone', frame)
         if cv2.waitKey(1) == ord('q'):
             break
