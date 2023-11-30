@@ -6,6 +6,7 @@ from transformers import DetrImageProcessor, DetrForObjectDetection
 from threading import Thread
 
 
+
 def detectPhone(processor, model, saved_pil_image):
     inputs = processor(images=saved_pil_image, return_tensors="pt")
     outputs = model(**inputs)
@@ -20,10 +21,12 @@ def detectPhone(processor, model, saved_pil_image):
         confidence = round(score.item(), 3)
         print(class_name, " ", confidence)
         if class_name == "cell phone":
-            print("FOUND CELL PHONE")
             phone_detected = True
+            return phone_detected
+        else:
+            phone_detected = False
+            return phone_detected
 
-    return phone_detected
 
 def runPhoneThread(camera):
     processor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50", revision="no_timm")
@@ -32,11 +35,10 @@ def runPhoneThread(camera):
     save_interval = 4
     start_time = time.time()
     last_save_time = start_time
-
     while True:
         succ, frame = camera.read()
         if not succ:
-            break
+            return 
 
         current_time = time.time()
         elapsed_time = current_time - last_save_time
@@ -48,15 +50,13 @@ def runPhoneThread(camera):
 
             saved_image = cv2.imread("imgs/checkingPhone.jpg")
             saved_pil_image = Image.fromarray(cv2.cvtColor(saved_image, cv2.COLOR_BGR2RGB))
+            phoneDetected = detectPhone(processor, model, saved_pil_image)
+            if phoneDetected:
+                print("Warning: A phone detected")
 
-            detection_thread = Thread(target=detectPhone, args=(processor, model, saved_pil_image))
-            detection_thread.start()
         
-        frame = cv2.resize(frame, (700, 300))
-        cv2.moveWindow("perchance finding phone", 700, 10)
-        cv2.imshow('perchance finding phone', frame)
-        if cv2.waitKey(1) == ord('q'):
-            break
+    if cv2.waitKey(1) == ord('q'):
+        return 
 
     camera.release()
     cv2.destroyAllWindows()
