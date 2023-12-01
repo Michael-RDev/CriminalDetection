@@ -1,6 +1,7 @@
 import cv2
 import urllib.request
 import numpy as np
+import time
 
 photo_path = "data/"
 
@@ -15,7 +16,7 @@ def get_image_name():
         return name + "_" + crime + ".png"
     else:
         print("Neither keys C nor F were pressed")
-        return False
+        exit()
 
 def web_mode(imagelink):
 
@@ -33,7 +34,8 @@ def web_mode(imagelink):
 def photo_mode(camera):
     
     image_name = get_image_name()
-
+    print("Press the Q-Key when you want the picture taken")
+    time.sleep(3)
     while True:
         succ, frame = camera.read()
         if not succ:
@@ -48,9 +50,9 @@ if __name__ == "__main__":
     cam = cv2.VideoCapture(0)
     mode = str(input("What mode do you want to capture the convict [Cam, Web]: Type (W or C))")).lower()
     if mode == "w":
-        imagelink = input("Provide image link here:")
+        imagelink = input("Provide image link here, then press enter:")
         web_mode(imagelink)
     elif mode == "c":
         photo_mode(cam)
     else:
-        print("Mode not found please type 'w' or 'c'")
+        print("Mode not found please type 'W' or 'C'")

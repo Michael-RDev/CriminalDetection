@@ -1,6 +1,5 @@
 import cv2
 from loadFunctions import names, crimes, images
-import time
 import numpy as np
 
 
