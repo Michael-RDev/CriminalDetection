@@ -6,7 +6,6 @@ from loadFunctions import names, crimes
 from openAlarm import open_alarm_when_detected
 from threading import Thread
 
-
 #reminder to clean camera
 
 def faceRecoCam(camera, known_face_encodings, names, crime):
@@ -15,10 +14,10 @@ def faceRecoCam(camera, known_face_encodings, names, crime):
     criminal_photo = "imgs/criminal.jpg"
     alarm_img = "imgs/Alarm.jpg"
     notification_img = "imgs/notification_img.jpg"
-    phoneThread = Thread(target=runPhoneThread, args=(camera, ))
+    phoneThread = Thread(target=runPhoneThread, args=(camera,))
     phoneThread.daemon = True
     phoneThread.start()
-
+    
     while True:
         ret, frame = camera.read()
         if not ret:
@@ -61,7 +60,7 @@ def faceRecoCam(camera, known_face_encodings, names, crime):
         process_this_frame = not process_this_frame
 
         for _,(location, name) in enumerate(zip(face_locations, face_names)):
-            if phoneThread == False:
+            if not phoneThread:
                 if location != ():
                     top, right, bottom, left = location
                     top *= 4
@@ -79,8 +78,6 @@ def faceRecoCam(camera, known_face_encodings, names, crime):
                     left *= 4
                     cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 255), 2)
                     cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 3)
-            elif phoneThread == True:
-                print("BABY DONT HURT ME NO MORE")
 
         if criminal_detected == True:
             open_alarm_when_detected(alarm_img, notification_img, name, crime, criminal_detected, criminal_photo, counter)

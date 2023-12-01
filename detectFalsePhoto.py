@@ -20,7 +20,7 @@ def detectPhone(processor, model, saved_pil_image):
         class_name = model.config.id2label[label.item()]
         confidence = round(score.item(), 3)
         print(class_name, " ", confidence)
-        if class_name == "cell phone":
+        if class_name == "cell phone" or class_name == "laptop" or class_name == "":
             phone_detected = True
             return phone_detected
         else:
@@ -52,7 +52,7 @@ def runPhoneThread(camera):
             saved_pil_image = Image.fromarray(cv2.cvtColor(saved_image, cv2.COLOR_BGR2RGB))
             phoneDetected = detectPhone(processor, model, saved_pil_image)
             if phoneDetected:
-                print("Warning: A phone detected")
+                print("Warning: A phone/laptop detected")
 
         
     if cv2.waitKey(1) == ord('q'):
