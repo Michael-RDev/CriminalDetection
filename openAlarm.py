@@ -52,5 +52,7 @@ def open_alarm_when_detected(img_thing, notification_image, name: str, crime: st
 
             if cv2.waitKey(1) == ord('q'):
                 cv2.destroyWindow("Alarm criminal")
+                criminal_detected = False
+                exit()
     else:
         cv2.destroyAllWindows()
