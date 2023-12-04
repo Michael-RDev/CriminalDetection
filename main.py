@@ -10,6 +10,7 @@ if __name__ == '__main__':
         if cam.isOpened():
             break
         else:
-            faceRecoCam(cam, known_face_encodings, names, crimes)
+            pass
+    faceRecoCam(cam, known_face_encodings, names, crimes)
 
     
