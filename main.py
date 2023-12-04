@@ -1,4 +1,4 @@
-from detectCriminal import face_recognition_cam
+from detectCriminal import faceRecoCam
 from loadFunctions import names, known_face_encodings, crimes
 import cv2
 
@@ -10,6 +10,6 @@ if __name__ == '__main__':
         if cam.isOpened():
             break
         else:
-            pass
+            faceRecoCam(cam, known_face_encodings, names, crimes)
 
     

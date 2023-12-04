@@ -44,7 +44,7 @@ def faceRecoCam(camera, known_face_encodings, names, crime):
                         if 0 <= first_match_index <= len(face_locations):
                             name = names[first_match_index]
                             crime = crimes[first_match_index]
-                            if face_locations[first_match_index] != ():
+                            if face_locations[first_match_index - 1] != ():
                                 criminal_encoding = known_face_encodings[first_match_index]
                                 is_criminal = face_recognition.compare_faces([criminal_encoding], face_encoding)[0]
                                 if is_criminal:
