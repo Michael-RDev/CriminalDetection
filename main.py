@@ -12,5 +12,3 @@ if __name__ == '__main__':
         else:
             pass
     faceRecoCam(cam, known_face_encodings, names, crimes)
-
-    

@@ -3,7 +3,6 @@ import torch
 import time
 from PIL import Image
 from transformers import DetrImageProcessor, DetrForObjectDetection
-from threading import Thread
 
 
 
@@ -20,7 +19,7 @@ def detectPhone(processor, model, saved_pil_image):
         class_name = model.config.id2label[label.item()]
         confidence = round(score.item(), 3)
         print(class_name, " ", confidence)
-        if class_name == "cell phone" or class_name == "laptop" or class_name == "":
+        if class_name == "cell phone" or class_name == "laptop" or class_name == "tv":
             phone_detected = True
             return phone_detected
         else:
@@ -53,13 +52,6 @@ def runPhoneThread(camera):
             phoneDetected = detectPhone(processor, model, saved_pil_image)
             if phoneDetected:
                 print("Warning: A phone/laptop detected")
-
-        
-    if cv2.waitKey(1) == ord('q'):
-        return 
-
-    camera.release()
-    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     cam = cv2.VideoCapture(1)

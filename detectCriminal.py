@@ -38,22 +38,20 @@ def faceRecoCam(camera, known_face_encodings, names, crime):
                 if  True in matches:
                     criminal_detected = True
                     first_match_index = matches.index(True)
-                    # if first_match_index != 0:  
-                    #     face_locations.insert(first_match_index - len(face_locations), ())
                     if face_locations:
                         if 0 <= first_match_index <= len(face_locations):
                             name = names[first_match_index]
                             crime = crimes[first_match_index]
-                            print("Face_locations: ", face_locations)
-                            print("First match: ", first_match_index)
-                            if face_locations[first_match_index - 1] != ():
+                            if face_locations[first_match_index - 1]:
                                 criminal_encoding = known_face_encodings[first_match_index]
                                 is_criminal = face_recognition.compare_faces([criminal_encoding], face_encoding)[0]
-                                print("is criminal?: ", is_criminal)
                                 if is_criminal:
-                                    top, right, bottom, left = face_locations[first_match_index - 1]
-                                    face_img = small_frame[top:bottom, left:right]
-                                    cv2.imwrite(criminal_photo, face_img)
+                                    if len(face_locations) == 1:
+                                        top, right, bottom, left = face_locations[first_match_index - 1]
+                                        face_img = small_frame[top:bottom, left:right]
+                                        cv2.imwrite(criminal_photo, face_img)
+                                    else:
+                                        pass 
                                 else:
                                     pass
                         else:
@@ -63,7 +61,6 @@ def faceRecoCam(camera, known_face_encodings, names, crime):
         process_this_frame = not process_this_frame
 
         for _,(location, name) in enumerate(zip(face_locations, face_names)):
-            if not phoneThread:
                 if location != ():
                     top, right, bottom, left = location
                     top *= 4
