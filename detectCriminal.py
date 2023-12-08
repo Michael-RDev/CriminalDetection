@@ -17,6 +17,7 @@ def faceRecoCam(camera, known_face_encodings, names, crime):
     phoneThread = Thread(target=runPhoneThread, args=(camera,))
     phoneThread.daemon = True
     phoneThread.start()
+    old_names = []
     
     while True:
         ret, frame = camera.read()
@@ -78,9 +79,9 @@ def faceRecoCam(camera, known_face_encodings, names, crime):
                     left *= 4
                     cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 255), 2)
                     cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 3)
-
+        
         if criminal_detected == True:
-            open_alarm_when_detected(alarm_img, notification_img, name, crime, criminal_detected, criminal_photo, counter)
+            open_alarm_when_detected(alarm_img, notification_img, name, crime, criminal_detected, criminal_photo, counter, old_names)
             counter += 1
         else: 
             counter = 0
