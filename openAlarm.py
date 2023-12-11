@@ -4,29 +4,28 @@ import numpy as np
 
 
 
-def open_mug_shot(names_mug: list, crimes_mug: list, images_mug: list, name: str, crime: str, counter:int, old_names:list):
-    macker = cv2.imread(r"C:\Users\maxrb\OneDrive\Documents\GitHub\CriminalDetection\imgs\hackercat2.jpg")
-    macker = cv2.resize(macker, (1000, 1000))
+def open_mug_shot(names_mug: list, crimes_mug: list, images_mug: list, name: str, crime: str, counter:int):
+    macker = cv2.imread("imgs/hackercat.jpg")
+    macker = cv2.resize(macker, (500, 500))
     if name in names_mug and crime in crimes_mug:
-        if counter < 10 and name not in old_names:
+        if counter < 10 :
+            #and name not in old_names
             random_index = np.random.randint(0, len(images_mug))
             random_img = cv2.imread(images_mug[random_index])
+            cv2.moveWindow("--Scanning Database--", 0, 300)
             cv2.imshow("--Scanning Database--", macker)
             return random_img
         elif counter == 10:
-            if cv2.getWindowProperty("--Scanning Database--", cv2.WND_PROP_VISIBLE) != -1:
-                try:
-                    cv2.destroyWindow("--Scanning Database--")
-                except:
-                    pass
-            old_names.append(name)
+            cv2.destroyWindow("--Scanning Database--")
             mug_shot_img = cv2.imread(images_mug[names_mug.index(name)])
+            mug_shot_img = cv2.resize(mug_shot_img, (500, 500))
+            cv2.imshow("Mug Shot Found", mug_shot_img)
             return mug_shot_img
-    return None
         
 
-def open_alarm_when_detected(img_thing, notification_image, name: str, crime: str, criminal_detected: bool, criminal_img: str, counter, old_names: list):
+def open_alarm_when_detected(img_thing, notification_image, name: str, crime: str, criminal_detected: bool, criminal_img: str, counter):
     img = None
+    mug_shot = open_mug_shot(names, crimes, images, name, crime, counter)
     if criminal_detected:
         for target_image in images:
             if str("data/" + name + "_" + crime) in target_image:
@@ -42,11 +41,8 @@ def open_alarm_when_detected(img_thing, notification_image, name: str, crime: st
             font_thick = int(3 * font_size)
             criminal = cv2.imread(criminal_img)
             criminal = cv2.resize(criminal, (500, 500))
-            mug_shot = open_mug_shot(names, crimes, images, name, crime, counter, old_names)
             if mug_shot is not None:
-                mug_shot = cv2.resize(mug_shot, (1000, 500))
                 combined_img = cv2.hconcat([img, criminal])
-                combined_img = cv2.vconcat([combined_img, mug_shot])
                 cv2.putText(combined_img, f"Name: {name}, Crime: {crime}", (txtpoints[0], txtpoints[1]), cv2.FONT_HERSHEY_SIMPLEX, font_size, (0, 0, 0), font_thick)
                 cv2.moveWindow("Alarm criminal", 500, 200)
                 cv2.imshow("Alarm criminal", combined_img)
@@ -62,3 +58,4 @@ def open_alarm_when_detected(img_thing, notification_image, name: str, crime: st
                 exit()
     else:
         cv2.destroyAllWindows()
+
